@@ -604,7 +604,7 @@
       document.getElementById('memories').scrollIntoView({ behavior: 'smooth' });
     }
     function playAction() {
-      if (currentVideo='') {
+      if (currentVideo == '') {
         console.log('Esta foto no tiene video asociado');
         return;
       }
@@ -615,14 +615,14 @@
 
         modalImg.style.backgroundImage = 'none';
 
-        modalVideo.pause();
+        // modalVideo.pause();
 
         // modalVideo.src = currentVideo;
         modalVideoSource.src = videoUrl;
         modalVideo.style.display = 'block';
         modalVideo.load();
 
-        // modalVideo.play();
+        modalVideo.play();
         modalVideo.play().catch(err => {
           console.error('PLAY ERROR:', err);
           console.error('MEDIA ERROR:', modalVideo.error);
