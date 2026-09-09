@@ -567,12 +567,43 @@
     </div>
   </div>
   <script>
-    function playAction() {for (let i = 0; i < 15; i++) {let heart = document.createElement('div'); heart.innerHTML = '❤️'; heart.className = 'heart-float'; heart.style.left = Math.random() * 100 + 'vw'; heart.style.top = '100vh'; heart.style.fontSize = (Math.random() * 20 + 20) + 'px'; heart.style.animationDuration = (Math.random() * 2 + 2) + 's'; document.body.appendChild(heart); setTimeout(() => heart.remove(), 4000);} document.getElementById('memories').scrollIntoView({behavior: 'smooth'});}
-    function infoAction() {document.getElementById('info-modal').style.display = 'flex';}
-    window.onload = function () {setTimeout(() => {const intro = document.getElementById('netflix-intro'); if (intro) intro.style.display = 'none';}, 3800);};
-    window.addEventListener('scroll', () => {const navbar = document.getElementById('navbar'); if (window.scrollY > 50) navbar.classList.add('black'); else navbar.classList.remove('black');});
+    function playAction() {
+      for (let i = 0; i < 15; i++) {
+        let heart = document.createElement('div'); 
+        heart.innerHTML = '❤️'; 
+        heart.className = 'heart-float'; 
+        heart.style.left = Math.random() * 100 + 'vw'; 
+        heart.style.top = '100vh'; 
+        heart.style.fontSize = (Math.random() * 20 + 20) + 'px'; 
+        heart.style.animationDuration = (Math.random() * 2 + 2) + 's'; 
+        document.body.appendChild(heart); setTimeout(() => heart.remove(), 4000);
+      } 
+      document.getElementById('memories').scrollIntoView({behavior: 'smooth'});
+    }
+    function infoAction() {
+      document.getElementById('info-modal').style.display = 'flex';
+    }
+    window.onload = function () {
+      setTimeout(() => {
+        const intro = document.getElementById('netflix-intro'); 
+        if (intro) intro.style.display = 'none';
+      }, 3800);
+    };
+    window.addEventListener(
+      'scroll', () => {
+        const navbar = document.getElementById('navbar'); 
+        if (window.scrollY > 50) navbar.classList.add('black'); 
+        else navbar.classList.remove('black');
+      }
+    );
     const sliders = document.querySelectorAll('.drag-scroll');
-    let isDown = false; let startX; let scrollLeft; let velX = 0; let momentumID; let isDragging = false; let lastX = 0;
+    let isDown = false; 
+    let startX; 
+    let scrollLeft; 
+    let velX = 0; 
+    let momentumID; 
+    let isDragging = false; 
+    let lastX = 0;
     sliders.forEach(slider => {
       slider.addEventListener('mousedown', (e) => {isDown = true; isDragging = false; slider.classList.add('active'); startX = e.pageX - slider.offsetLeft; lastX = e.pageX; scrollLeft = slider.scrollLeft; velX = 0; cancelAnimationFrame(momentumID);});
       slider.addEventListener('mouseleave', () => {if (isDown) endDrag(slider); isDown = false;});
@@ -580,10 +611,30 @@
       slider.addEventListener('mousemove', (e) => {if (!isDown) return; e.preventDefault(); const x = e.pageX - slider.offsetLeft; const walk = (x - startX) * 1; slider.scrollLeft = scrollLeft - walk; velX = e.pageX - lastX; lastX = e.pageX; if (Math.abs(walk) > 5) isDragging = true;});
       slider.addEventListener('touchstart', () => {isDragging = false;}); slider.addEventListener('touchmove', () => {isDragging = true;});
     });
-    function endDrag(slider) {slider.classList.remove('active'); if (velX > 20) velX = 20; if (velX < -20) velX = -20; function momentumLoop() {slider.scrollLeft -= velX; velX *= 0.90; if (Math.abs(velX) > 0.5) {momentumID = requestAnimationFrame(momentumLoop);} } momentumLoop();}
-    const modal = document.getElementById('modal'); const modalTitle = document.getElementById('modal-title'); const modalDesc = document.getElementById('modal-desc'); const modalYear = document.getElementById('modal-year'); const modalImg = document.getElementById('modal-img');
+    function endDrag(slider) {
+      slider.classList.remove('active'); 
+      if (velX > 20) velX = 20; 
+      if (velX < -20) velX = -20; 
+      function momentumLoop() {
+        slider.scrollLeft -= velX; velX *= 0.90; 
+        if (Math.abs(velX) > 0.5) {
+          momentumID = requestAnimationFrame(momentumLoop);
+        } 
+      } momentumLoop();
+    }
+    const modal = document.getElementById('modal'); 
+    const modalTitle = document.getElementById('modal-title'); 
+    const modalDesc = document.getElementById('modal-desc'); 
+    const modalYear = document.getElementById('modal-year'); 
+    const modalImg = document.getElementById('modal-img');
     document.querySelectorAll('.card').forEach(card => {card.addEventListener('click', function () {if (isDragging) return; openModal(this.getAttribute('data-title'), this.getAttribute('data-desc'), this.getAttribute('data-year'), this.getAttribute('data-img'));});});
-    function openModal(title, desc, year, image) {modalTitle.innerText = title; modalDesc.innerText = desc; modalYear.innerText = year; modalImg.style.backgroundImage = "url('" + image + "')"; modal.classList.add('active');}
+    function openModal(title, desc, year, image) {
+      modalTitle.innerText = title; 
+      modalDesc.innerText = desc; 
+      modalYear.innerText = year; 
+      modalImg.style.backgroundImage = "url('" + image + "')"; 
+      modal.classList.add('active');
+    }
     function closeModal() {modal.classList.remove('active');}
     modal.addEventListener('click', (e) => {if (e.target === modal) closeModal();});
   </script>
