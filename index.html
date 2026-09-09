@@ -450,6 +450,47 @@
         height: 240px;
       }
     }
+
+    .video-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      z-index: 3000;
+
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-overlay.active {
+        display: flex;
+    }
+
+    #video-player {
+        width: 90%;
+        max-width: 1100px;
+        max-height: 85vh;
+        background: black;
+        object-fit: contain;
+    }
+
+    .close-video {
+        position: absolute;
+        top: 20px;
+        right: 25px;
+
+        width: 42px;
+        height: 42px;
+
+        border: none;
+        border-radius: 50%;
+        background: #181818;
+        color: white;
+        font-size: 22px;
+        cursor: pointer;
+
+        z-index: 10;
+    }
   </style>
 </head>
 
@@ -549,7 +590,7 @@
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">×</button>
       <div class="modal-header" id="modal-img">
-        <video 
+        <!-- <video 
           id="modal-video"
           controls
           playsinline
@@ -562,7 +603,7 @@
             background:black;
           ">
           <source id="modal-video-source" type="video/mp4">
-        </video>
+        </video> -->
       </div>
       <div class="modal-body">
         <div class="modal-left">
@@ -581,6 +622,14 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="video-overlay" id="video-modal">
+    <button class="close-video" onclick="closeVideo()">×</button>
+
+    <video id="video-player" controls playsinline>
+      <source id="video-source" type="video/mp4">
+    </video>
   </div>
   <script>
     var currentVideo = '';
@@ -609,24 +658,36 @@
         return;
       }
       else{
-        const videoUrl = new URL(currentVideo, window.location.href).href;
+        const videoUrl = new URL(
+          currentVideo, 
+          window.location.href
+        ).href;
 
         console.log('VIDEO URL:', videoUrl);
 
-        modalImg.style.backgroundImage = 'none';
+        // modalImg.style.backgroundImage = 'none';
 
         // modalVideo.pause();
 
         // modalVideo.src = currentVideo;
-        modalVideoSource.src = videoUrl;
-        modalVideo.style.display = 'block';
-        modalVideo.load();
+        // modalVideoSource.src = videoUrl;
+        // modalVideo.style.display = 'block';
+        // modalVideo.load();
 
-        modalVideo.play();
-        modalVideo.play().catch(err => {
-          console.error('PLAY ERROR:', err);
-          console.error('MEDIA ERROR:', modalVideo.error);
-          console.error('CURRENT SRC:', modalVideo.currentSrc);
+        // modalVideo.play();
+        // modalVideo.play().catch(err => {
+        //   console.error('PLAY ERROR:', err);
+        //   console.error('MEDIA ERROR:', modalVideo.error);
+        //   console.error('CURRENT SRC:', modalVideo.currentSrc);
+        // });
+        videoSource.src = videoUrl;
+
+        videoModal.classList.add('active');
+
+        videoPlayer.load();
+
+        videoPlayer.play().catch(err => {
+            console.error(err);
         });
       }
 
@@ -679,8 +740,11 @@
     const modalDesc = document.getElementById('modal-desc'); 
     const modalYear = document.getElementById('modal-year'); 
     const modalImg = document.getElementById('modal-img');
-    const modalVideo = document.getElementById('modal-video');
-    const modalVideoSource = document.getElementById('modal-video-source');
+    // const modalVideo = document.getElementById('modal-video');
+    // const modalVideoSource = document.getElementById('modal-video-source');
+    const videoModal = document.getElementById('video-modal');
+    const videoPlayer = document.getElementById('video-player');
+    const videoSource = document.getElementById('video-source');
     
     document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('click', function () {
@@ -712,14 +776,26 @@
     }
     function closeModal() {
       modal.classList.remove('active');
-
-      modalVideo.pause();
-      modalVideo.currentTime = 0;
-      modalVideo.style.display = 'none';
-      modalVideo.removeAttribute('src');
-      modalVideo.load();
     }
-    modal.addEventListener('click', (e) => {if (e.target === modal) closeModal();});
+
+    function closeVideo() {
+
+      videoPlayer.pause();
+      videoPlayer.currentTime = 0;
+
+      videoSource.removeAttribute('src');
+      videoPlayer.load();
+
+      videoModal.classList.remove('active');
+    }
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+    videoModal.addEventListener('click', function(e) {
+      if (e.target === videoModal) {
+          closeVideo();
+      }
+    });
   </script>
 </body>
 
