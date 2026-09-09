@@ -549,16 +549,19 @@
     <div class="modal-content">
       <button class="close-btn" onclick="closeModal()">×</button>
       <div class="modal-header" id="modal-img">
-        <video id="modal-video"
-           controls
-           playsinline
-           style="
-             display:none;
-             width:100%;
-             height:100%;
-             object-fit:cover;
-             background:black;
-           ">
+        <video 
+          id="modal-video"
+          controls
+          playsinline
+          preload="metadata"
+          style="
+            display:none;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            background:black;
+          ">
+          <source id="modal-video-source" type="video/mp4">
         </video>
       </div>
       <div class="modal-body">
@@ -606,12 +609,25 @@
         return;
       }
       else{
+        const videoUrl = new URL(currentVideo, window.location.href).href;
+
+        console.log('VIDEO URL:', videoUrl);
+
         modalImg.style.backgroundImage = 'none';
 
-        modalVideo.src = currentVideo;
-        modalVideo.style.display = 'block';
+        modalVideo.pause();
 
-        modalVideo.play();
+        // modalVideo.src = currentVideo;
+        modalVideoSource.src = videoUrl;
+        modalVideo.style.display = 'block';
+        modalVideo.load();
+
+        // modalVideo.play();
+        modalVideo.play().catch(err => {
+          console.error('PLAY ERROR:', err);
+          console.error('MEDIA ERROR:', modalVideo.error);
+          console.error('CURRENT SRC:', modalVideo.currentSrc);
+        });
       }
 
       
@@ -664,6 +680,7 @@
     const modalYear = document.getElementById('modal-year'); 
     const modalImg = document.getElementById('modal-img');
     const modalVideo = document.getElementById('modal-video');
+    const modalVideoSource = document.getElementById('modal-video-source');
     
     document.querySelectorAll('.card').forEach(card => {
       card.addEventListener('click', function () {
